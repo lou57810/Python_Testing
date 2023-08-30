@@ -1,0 +1,14 @@
+{
+    "competitions": [
+        {
+            "name": "Summer Meeting",
+            "date": "2023-04-20 15:00:00",
+            "numberOfPlaces": "35"
+        },
+        {
+            "name": "Canadian Lifter",
+            "date": "2023-11-20 18:30:00",
+            "numberOfPlaces": "25"
+        }
+    ]
+}

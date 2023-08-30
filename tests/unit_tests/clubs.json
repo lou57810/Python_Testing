@@ -1,0 +1,16 @@
+{"clubs":[
+    {
+        "name":"Héraclès_Temple",
+        "email":"hercule@heavylift.gr",
+        "points":"18"
+    },
+    {
+        "name":"Popeye_Loft",
+        "email": "pop@spinach.com",
+        "points":"15"
+    },
+    {   "name":"Serena_Lounge",
+        "email": "venus@sheace.us",
+        "points":"14"
+    }
+]}
