@@ -1,5 +1,6 @@
 import pytest
 import requests
+from bs4 import BeautifulSoup
 import unittest
 import json
 
@@ -13,13 +14,14 @@ from flask import Flask
 import os
 
 
+
 # ============ Logging ==============
 
 def test_index_email_ok(client):
     response = client.get('/')
     assert response.status_code == 200
     data = response.data.decode()
-    assert "Welcome" in data
+    assert "Welcome to the GUDLFT Registration Portal!" in data
 
 
 def test_index_email_wrong(client):
@@ -72,9 +74,7 @@ def test_local_loadClubs():
 def test_local_loadCompetitions():
     pass
 """
-# ================================================================
-""" test messages of usage of points and places """
-
+# ================== Test load fct =====================
 
 class TestLoadClubs(unittest.TestCase):
     @patch('Python_Testing.server.loadClubs')
@@ -120,3 +120,47 @@ class TestLoadCompetitions(unittest.TestCase):
         }
     ]
         self.assertEqual(loadCompetitions(), competitions)
+
+
+# =============== Test booking page ==================
+
+def test_book_page_access_function(client):
+
+    email = server.loadClubs()[0]['email']
+    response = client.post("/showSummary", data={"email": email})
+
+    data = response.data.decode()
+    assert response.status_code == 200
+
+    soup = BeautifulSoup(data, "html.parser")
+    # print('email:', email)
+    # print('response:', response)
+    # print('data:', data)
+    # print('soup:', soup.h2)
+
+    assert soup.h2.get_text() == 'Welcome,' + ' ' + email + ' '
+
+
+def test_purchase_page_access_function(client):
+    club_name = server.loadClubs()[1]['name']
+    comp_name = server.loadCompetitions()[1]['name']
+    # response = client.post("/Iron Temple", data={"name": comp_name})
+    response = client.get('/book/' + comp_name + '/' + club_name)
+    print('response:', response)
+
+    assert response.status_code == 200
+    data = response.data.decode()
+
+    soup = BeautifulSoup(data, "html.parser")
+    assert soup.h2.get_text() == comp_name
+
+    print('name:', comp_name)
+    # print('response:', response)
+    # print('data:', data)
+    print('soup:', soup.h2)
+
+ # ==== test booking messages of usage of points and places ====
+
+
+
+
