@@ -6,13 +6,13 @@ import json
 
 from .conftest import client
 from unittest import mock, TestCase
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
 from Python_Testing import server
 from Python_Testing.server import loadClubs, clubs, competitions
+from Python_Testing.tests.unit_tests.conftest import mock_clubs, mock_comps
 from Python_Testing.server import loadCompetitions
 from flask import Flask
 import os
-
 
 
 # ============ Logging ==============
@@ -75,50 +75,26 @@ def test_local_loadCompetitions():
     pass
 """
 # ================== Test load fct =====================
+"""
+json_file = opent('/users.json')
+json_payload = json.load(json_file)
+response = requests.post(url=base_url, headers=headers_test, json=json_payload)
+print(response.text)
+"""
 
 class TestLoadClubs(unittest.TestCase):
+
     @patch('Python_Testing.server.loadClubs')
-    def test_load_clubs_response(self, mock_get_club_json):
-        mock_get_club_json.return_value = [
-    {
-        "name": "Héraclès_Temple",
-        "email": "hercule@heavylift.gr",
-        "points": "18"
-    },
-    {
-        "name": "Popeye_Loft",
-        "email": "pop@spinach.com",
-        "points": "15"
-    },
-    {
-        "name": "Serena_Lounge",
-        "email": "venus@sheace.us",
-        "points": "14"
-    }
-]
+    def test_load_clubs_response(self, mock_loadClubs):
+
+        mock_loadClubs.return_value = mock_clubs
         self.assertEqual(loadClubs(), clubs)
 
 
 class TestLoadCompetitions(unittest.TestCase):
     @patch('Python_Testing.server.loadCompetitions')
-    def test_load_competitions_response(self, mock_get_comp_json):
-        mock_get_comp_json.return_value = [
-        {
-            "name": "Summer LiftFest",
-            "date": "2023-04-20 15:00:00",
-            "numberOfPlaces": "35"
-        },
-        {
-            "name": "Canadian Lifter",
-            "date": "2023-10-15 16:30:00",
-            "numberOfPlaces": "25"
-        },
-        {
-            "name": "Australian Lifter",
-            "date": "2023-11-20 18:30:00",
-            "numberOfPlaces": "11"
-        }
-    ]
+    def test_load_competitions_response(self, mock_loadCompetitions):
+        mock_loadCompetitions.return_value = mock_comps
         self.assertEqual(loadCompetitions(), competitions)
 
 
@@ -133,20 +109,14 @@ def test_book_page_access_function(client):
     assert response.status_code == 200
 
     soup = BeautifulSoup(data, "html.parser")
-    # print('email:', email)
-    # print('response:', response)
-    # print('data:', data)
-    # print('soup:', soup.h2)
-
     assert soup.h2.get_text() == 'Welcome,' + ' ' + email + ' '
 
 
 def test_purchase_page_access_function(client):
     club_name = server.loadClubs()[1]['name']
     comp_name = server.loadCompetitions()[1]['name']
-    # response = client.post("/Iron Temple", data={"name": comp_name})
+
     response = client.get('/book/' + comp_name + '/' + club_name)
-    print('response:', response)
 
     assert response.status_code == 200
     data = response.data.decode()
@@ -154,12 +124,21 @@ def test_purchase_page_access_function(client):
     soup = BeautifulSoup(data, "html.parser")
     assert soup.h2.get_text() == comp_name
 
-    print('name:', comp_name)
-    # print('response:', response)
-    # print('data:', data)
-    print('soup:', soup.h2)
-
  # ==== test booking messages of usage of points and places ====
+"""
+def test_allocation_points(client):
+
+
+    c = server.loadClubs()[1]('name')
+    comp = server.loadCompetitions()[1]['name']
+    response = client.get('/purchasePlaces', data={'points': points})
+    assert response.status_code == 200
+    print('response:', response)
+    
+    if int(club['points']) > 12:
+        assert "You can't book more than 12 places! Retry." in data.response.decode()
+"""
+
 
 
 
