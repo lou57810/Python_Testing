@@ -1,19 +1,23 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
-
-
-
+from pathlib import Path
+# import sys
+# from pprint import pprint
+# pprint(sys.path)
+# project_dir = Path(__file__).parent
+# print('project_dir:', project_dir)
 
 def loadClubs():
     with open('clubs.json') as c:
         listOfClubs = json.load(c)['clubs']
-        print('listclubs:', listOfClubs)
+        # print('listclubs:', listOfClubs)
         return listOfClubs
 
 
 def loadCompetitions():
     with open('competitions.json') as comps:
         listOfCompetitions = json.load(comps)['competitions']
+        # print('listCompetitions:', listOfCompetitions)
         return listOfCompetitions
 
 
@@ -57,22 +61,25 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+    
+    number_of_places = int(competition['numberOfPlaces'])
+    points = int(club['points'])
 
-    if placesRequired > int(competition['numberOfPlaces']):
-        flash("You don't have enough places! Retry.")
+    if placesRequired > number_of_places:
+        flash("Not enough places ! Retry.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    if placesRequired > points:
+        flash("Not enough points ! Retry.")
+        return render_template('welcome.html', club=club, competitions=competitions)
     if placesRequired > 12:
-        flash("You can't book more than 12 places")
-        return render_template('welcome.html', club=club, competition=competition)
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-
-    if placesRequired > int(club['points']):
-        flash("You don't have enough points! Retry.")
-        return render_template('welcome.html', club=club, competition=competition)
-    club['points'] = int(club['points']) - placesRequired
-
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
-
+        flash("You can't book more than 12 places ! Retry.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    else:
+        club['points'] = int(club['points']) - placesRequired
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+        print('Points, PlacesDispos:', club['points'], int(competition['numberOfPlaces']))
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
 
 # TODO: Add route for points display
 
