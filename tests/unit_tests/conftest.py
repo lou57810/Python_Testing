@@ -14,17 +14,17 @@ def client():
 mock_clubs = [
     {
         "name": "Héraclès_Temple",
-        "email": "hercule@heavylift.gr",
-        "points": "18"
+        "email": "heracles@heavylift.gr",
+        "points": "12"
     },
     {
         "name": "Popeye_Loft",
-        "email": "pop@spinach.com",
-        "points": "15"
+        "email": "popeye@spinach.com",
+        "points": "9"
     },
     {
         "name": "Serena_Lounge",
-        "email": "venus@sheace.us",
+        "email": "serena@sheace.us",
         "points": "14"
     }
 ]
@@ -39,7 +39,7 @@ mock_comps = [
         {
             "name": "Canadian Lifter",
             "date": "2023-10-15 16:30:00",
-            "numberOfPlaces": "25"
+            "numberOfPlaces": "9"
         },
         {
             "name": "Australian Lifter",
