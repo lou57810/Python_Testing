@@ -52,7 +52,14 @@ def showSummary():
 def book(competition, club):
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
+
+    print('found:', foundCompetition['date'])
+    date = datetime.strptime(foundCompetition['date'], "%Y-%m-%d %H:%M:%S")
     if foundClub and foundCompetition:
+        if datetime.now() > date:
+            flash("You cannot book places on post-dated competitions !")
+            return render_template('welcome.html', club=club, competitions=competitions)
+
         return render_template('booking.html', club=foundClub,competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
@@ -67,9 +74,6 @@ def purchasePlaces():
     placesRequired = int(request.form['places'])
     number_of_places = int(competition['numberOfPlaces'])
     points = int(club['points'])
-
-    # if datetime.now() > datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S"):
-        # flash(f"You can't book places on post-dated competitions - date: {competition['date']}.")
 
     if placesRequired > number_of_places:
         flash("Not enough places ! Retry.")

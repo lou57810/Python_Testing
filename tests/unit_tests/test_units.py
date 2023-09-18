@@ -10,9 +10,10 @@ from unittest.mock import patch, Mock, MagicMock
 from Python_Testing import server
 from Python_Testing.server import loadClubs, clubs, competitions
 from Python_Testing.tests.unit_tests.conftest import mock_clubs, mock_comps
+from datetime import datetime
 
 from Python_Testing.server import loadCompetitions
-from flask import Flask
+from flask import Flask, flash
 import os
 
 
@@ -78,13 +79,16 @@ def test_purchase_page_access_function(client, mocker):
 
     club_name = mock_clubs[0]['name']
     comp_name = mock_comps[0]['name']
+    email = "heracles@heavylift.gr"
     response = client.get('/book/' + comp_name + '/' + club_name)
 
     assert response.status_code == 200
     data = response.data.decode()
+    print('data:', data)
 
     soup = BeautifulSoup(data, "html.parser")
-    assert soup.h2.get_text() == comp_name
+    print('soupe:', soup.h2.get_text)
+    assert soup.h2.get_text() == 'Welcome,  '
 
 
 # ==== test booking messages of usage of points and places ====
@@ -194,6 +198,23 @@ def test_over_limit_twelve_points(client, mocker):
         print('You can\'t book more than 12 places ! Retry.')
         soup = BeautifulSoup(data, "html.parser")
         assert soup.li.get_text() == "You can't book more than 12 places ! Retry."
+
+
+def test_post_booking(client, mocker):
+
+    mocker.patch.object(server, "clubs", mock_clubs)
+    mocker.patch.object(server, "competitions", mock_comps)
+
+    club_name = mock_clubs[0]['name']
+    comp_name = mock_comps[0]['name']
+
+    response = client.get('/book/' + comp_name + '/' + club_name)
+
+    assert response.status_code == 200
+    data = response.data.decode()
+
+    assert "You cannot book places on post-dated competitions !" in data
+
 
 
 

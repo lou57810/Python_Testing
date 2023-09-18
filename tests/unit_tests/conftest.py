@@ -32,7 +32,7 @@ mock_clubs = [
 
 mock_comps = [
         {
-            "name": "Summer LiftFest",
+            "name": "Summer LiftTest",
             "date": "2023-04-20 15:00:00",
             "numberOfPlaces": "35"
         },
