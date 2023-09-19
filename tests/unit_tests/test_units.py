@@ -145,6 +145,7 @@ def test_over_loaded_points(client, mocker):
         # soup = BeautifulSoup(data, "html.parser")
         assert "Not enough points ! Retry." in data
 
+
 def test_retry_points(client, mocker):
 
     mocker.patch.object(server, "clubs", mock_clubs)
@@ -199,7 +200,7 @@ def test_over_limit_twelve_points(client, mocker):
         soup = BeautifulSoup(data, "html.parser")
         assert soup.li.get_text() == "You can't book more than 12 places ! Retry."
 
-
+# ================ Dates test ========================
 def test_post_booking(client, mocker):
 
     mocker.patch.object(server, "clubs", mock_clubs)
@@ -214,6 +215,21 @@ def test_post_booking(client, mocker):
     data = response.data.decode()
 
     assert "You cannot book places on post-dated competitions !" in data
+
+
+# ================= Dashboard test =======================
+
+def test_dashboard_page(client, mocker):
+    mocker.patch.object(server, "clubs", mock_clubs)
+    response = client.get('/dashboard')
+    data = response.data.decode()
+    assert response.status_code == 200
+    assert mock_clubs[1]['name'] in data
+    assert mock_clubs[1]['points'] == '9'
+    # mock_clubs[0]['name'] déja décrémenté:
+    # (12 - 12) dans le test retry ==> mock_clubs[0]['name'] == '0'
+    print('mocked:', mock_clubs[0]['name'], mock_clubs[0]['points'],
+          mock_clubs[1]['name'], mock_clubs[1]['points'])
 
 
 
