@@ -4,12 +4,12 @@ from bs4 import BeautifulSoup
 import unittest
 import json
 
-from .conftest import client
+from Python_Testing.tests.conftest import client
 from unittest import mock, TestCase
 from unittest.mock import patch, Mock, MagicMock
 from Python_Testing import server
 from Python_Testing.server import loadClubs, clubs, competitions
-from Python_Testing.tests.unit_tests.conftest import mock_clubs, mock_comps
+from Python_Testing.tests.conftest import mock_clubs, mock_comps
 from datetime import datetime
 
 from Python_Testing.server import loadCompetitions
@@ -35,9 +35,10 @@ def test_index_email_wrong(client):
 
 
 def test_logout_page(client):
-    response = client.get('/logout')
+    response = client.get('/logout', follow_redirects=True)
     data = response.data.decode()
-    assert response.status_code == 302
+    assert response.status_code == 200
+    assert "Welcome to the GUDLFT Registration Portal!" in data
 
 
 # ================== Test load fct =====================
@@ -63,7 +64,9 @@ def test_book_page_access_function(client, mocker):
 
     mocker.patch.object(server, "clubs", mock_clubs)
 
-    email = "heracles@heavylift.gr"
+    # email = "heracles@heavylift.gr"
+    email = mock_clubs[0]['email']
+
     response = client.post("/showSummary", data={"email": email})
 
     data = response.data.decode()
@@ -84,7 +87,7 @@ def test_purchase_page_access_function(client, mocker):
 
     assert response.status_code == 200
     data = response.data.decode()
-    print('data:', data)
+    # print('data:', data)
 
     soup = BeautifulSoup(data, "html.parser")
     print('soupe:', soup.h2.get_text)
@@ -228,8 +231,8 @@ def test_dashboard_page(client, mocker):
     assert mock_clubs[1]['points'] == '9'
     # mock_clubs[0]['name'] déja décrémenté:
     # (12 - 12) dans le test retry ==> mock_clubs[0]['name'] == '0'
-    print('mocked:', mock_clubs[0]['name'], mock_clubs[0]['points'],
-          mock_clubs[1]['name'], mock_clubs[1]['points'])
+    print('\n', 'Club name:', mock_clubs[0]['name'], 'points:', mock_clubs[0]['points'], '\n',
+          'Club name:', mock_clubs[1]['name'], 'points:', mock_clubs[1]['points'])
 
 
 

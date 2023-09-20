@@ -2,8 +2,6 @@ import pytest
 # import Python_Testing.server
 from Python_Testing.server import app
 
-
-
 @pytest.fixture
 def client():    
     app.config["TESTING"] = True
@@ -23,9 +21,14 @@ mock_clubs = [
         "points": "9"
     },
     {
-        "name": "Serena_Lounge",
-        "email": "serena@sheace.us",
+        "name": "Serena_Queen",
+        "email": "serena@queenace.us",
         "points": "14"
+    },
+    {
+        "name": "TestClub",
+        "email": "testclub@mysite.com",
+        "points": "9"
     }
 ]
 # mocker_clubs = [Club(**club) for club in mock_clubs]
