@@ -22,15 +22,15 @@
 
     * Virtual environment using Windows10 and git bash:
 
-        i. ``` python -m venv env ```
+        1. ``` python -m venv env ```
 
-        ii. ``` source env/scripts/activate ```
+        2. ``` source env/scripts/activate ```
 
     * Virtual environment using Linux:
 
-        i. ``` python -m venv env ```
+        1. ``` python -m venv env ```
 
-        ii. ``` source env/bin/activate ```
+        2. ``` source env/bin/activate ```
 
     * Type ``` pip install -r requirements.txt ``` This will ensure all the packages needed for the program ok.
 
