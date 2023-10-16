@@ -76,3 +76,11 @@
     We also like to show how well we're testing, so there's a module called 
     [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
 
+6. Flake8
+
+    * ``` flake8 --exclude env  --max-line-length 120 --format=html --htmldir=flake-report ```
+
+    * --exclude env because errors
+
+    * --max-line-lentgh 120 because default 79 is to short and --format to get results in browser.
+

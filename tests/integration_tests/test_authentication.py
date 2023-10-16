@@ -1,8 +1,5 @@
-import pytest
-
 from bs4 import BeautifulSoup
 from Python_Testing import server
-from Python_Testing.tests.conftest import client
 from Python_Testing.tests.conftest import mock_clubs, mock_comps
 
 
@@ -18,19 +15,17 @@ def test_server_sequence(client, mocker):
     # Vérifier la redirection vers la page sommaire
     assert response.status_code == 200
     soup = BeautifulSoup(data, "html.parser")
-    assert soup.h2.get_text() == 'Welcome,' + ' ' + email + ' '
+    assert soup.h2.get_text() == 'Welcome, ' + email + ' '
 
     # Verifier la redirection vers la page competition
     club_name = mock_clubs[3]['name']
     comp_name = mock_comps[1]['name']
 
     response = client.get('/book/' + comp_name + '/' + club_name)
-
     assert response.status_code == 200
     data = response.data.decode()
 
     soup = BeautifulSoup(data, "html.parser")
-    print('soupe:', soup.h2.get_text)
     assert soup.h2.get_text() == comp_name
 
     # Verifier l'envoi et la cohérence des datas
@@ -48,6 +43,3 @@ def test_server_sequence(client, mocker):
     data = response.data.decode()
     assert response.status_code == 200
     assert "Welcome to the GUDLFT Registration Portal!" in data
-
-
-

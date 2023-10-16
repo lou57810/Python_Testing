@@ -1,26 +1,17 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
-from pathlib import Path
 from datetime import datetime
 
-
-# import sys
-# from pprint import pprint
-# pprint(sys.path)
-# project_dir = Path(__file__).parent
-# print('project_dir:', project_dir)
 
 def loadClubs():
     with open('clubs.json') as c:
         listOfClubs = json.load(c)['clubs']
-        # print('listclubs:', listOfClubs)
         return listOfClubs
 
 
 def loadCompetitions():
     with open('competitions.json') as comps:
         listOfCompetitions = json.load(comps)['competitions']
-        # print('listCompetitions:', listOfCompetitions)
         return listOfCompetitions
 
 
@@ -60,7 +51,7 @@ def book(competition, club):
             flash("You cannot book places on post-dated competitions !")
             return render_template('welcome.html', club=club, competitions=competitions)
 
-        return render_template('booking.html', club=foundClub,competition=foundCompetition)
+        return render_template('booking.html', club=foundClub, competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
@@ -95,7 +86,8 @@ def purchasePlaces():
 # TODO: Add route for points display
 @app.route('/dashboard')
 def display_datas():
-    if clubs != None:
+
+    if clubs:
         return render_template('dashboard.html', clubs=clubs)
 
 

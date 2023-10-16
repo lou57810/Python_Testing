@@ -2,9 +2,10 @@ import pytest
 # import Python_Testing.server
 from Python_Testing.server import app
 
+
 @pytest.fixture
-def client():    
-    app.config["TESTING"] = True
+def client():
+    app.config["TESTING"] = True    # For better error reports
     with app.test_client() as client:
         yield client
 
@@ -41,7 +42,7 @@ mock_comps = [
         },
         {
             "name": "Canadian Lifter",
-            "date": "2023-10-15 16:30:00",
+            "date": "2023-10-30 16:30:00",
             "numberOfPlaces": "9"
         },
         {
@@ -50,26 +51,3 @@ mock_comps = [
             "numberOfPlaces": "11"
         }
     ]
-"""
-mocker_comps = [Competition(**comp) for comp in mock_comps]
-
-mocker_data = Data(None, None)
-mocker_data.clubs = [Club(**club) for club in mock_clubs]
-mocker_data.competitions = [Competition(**comp) for comp in mock_comps]
-
-
-@pytest.fixture
-def app(mocker):
-    mocker.patch.object(server, "COMPETITIONS", test_comp())
-    mocker.patch.object(server, "CLUBS", test_club())
-    return create_app({"TESTING": True})
-
-
-@pytest.fixture
-def loadLocalClubJson():
-    w_dir = os.path.abspath('.')
-    if os.path.isfile(os.path.join(w_dir)):
-        print('os.path')
-        print(w_dir)
-        return os.path
-"""

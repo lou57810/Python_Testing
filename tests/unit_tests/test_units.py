@@ -1,20 +1,12 @@
-import pytest
-import requests
 from bs4 import BeautifulSoup
 import unittest
-import json
 
-from Python_Testing.tests.conftest import client
-from unittest import mock, TestCase
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch
 from Python_Testing import server
 from Python_Testing.server import loadClubs, clubs, competitions
 from Python_Testing.tests.conftest import mock_clubs, mock_comps
-from datetime import datetime
 
 from Python_Testing.server import loadCompetitions
-from flask import Flask, flash
-import os
 
 
 # ============ Logging ==============
@@ -82,7 +74,6 @@ def test_purchase_page_access_function(client, mocker):
 
     club_name = mock_clubs[0]['name']
     comp_name = mock_comps[0]['name']
-    email = "heracles@heavylift.gr"
     response = client.get('/book/' + comp_name + '/' + club_name)
 
     assert response.status_code == 200
@@ -116,11 +107,9 @@ def test_over_booked_places(client, mocker):
     print('booked:', placesRequired)
 
     if int(placesRequired) > mock_places:
-        print('Not enough places ! Retry.')
         assert "Not enough places ! Retry." in data
     else:
-        print('Great-booking complete!')
-        assert("Great-booking complete!") in data
+        assert "Great-booking complete!" in data
 
 
 def test_over_loaded_points(client, mocker):
@@ -140,8 +129,6 @@ def test_over_loaded_points(client, mocker):
     assert response.status_code == 200
 
     data = response.data.decode()
-    print('Points disponibles:', mock_points)
-    print('booked:', placesRequired)
 
     if int(placesRequired) > mock_points:
         print("Not enough points ! Retry.")
@@ -203,6 +190,7 @@ def test_over_limit_twelve_points(client, mocker):
         soup = BeautifulSoup(data, "html.parser")
         assert soup.li.get_text() == "You can't book more than 12 places ! Retry."
 
+
 # ================ Dates test ========================
 def test_post_booking(client, mocker):
 
@@ -229,16 +217,5 @@ def test_dashboard_page(client, mocker):
     assert response.status_code == 200
     assert mock_clubs[1]['name'] in data
     assert mock_clubs[1]['points'] == '9'
-    # mock_clubs[0]['name'] déja décrémenté:
-    # (12 - 12) dans le test retry ==> mock_clubs[0]['name'] == '0'
     print('\n', 'Club name:', mock_clubs[0]['name'], 'points:', mock_clubs[0]['points'], '\n',
           'Club name:', mock_clubs[1]['name'], 'points:', mock_clubs[1]['points'])
-
-
-
-
-
-
-
-
-
