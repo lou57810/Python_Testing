@@ -7,6 +7,7 @@ from Python_Testing.server import loadClubs, clubs, competitions
 from Python_Testing.tests.conftest import mock_clubs, mock_comps
 
 from Python_Testing.server import loadCompetitions
+from flask import Flask
 
 
 # ============ Logging ==============
